@@ -110,9 +110,17 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;mi
 .check-item.checked{border-color:var(--accent);background:rgba(212,175,55,.1);color:var(--accent)}
 .color-dot{width:14px;height:14px;border-radius:50%;border:1px solid rgba(255,255,255,.2)}
 
-/* ── Image preview ── */
-.img-preview{width:100%;max-width:200px;height:160px;object-fit:cover;border-radius:10px;border:1px solid var(--border);display:none;margin-top:8px}
-.img-preview.show{display:block}
+/* ── Multi-image ── */
+.img-list{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
+.img-row{display:flex;gap:8px;align-items:center}
+.img-row input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-size:.88rem;outline:none;transition:border-color .2s}
+.img-row input:focus{border-color:var(--accent)}
+.img-thumb{width:52px;height:52px;object-fit:cover;border-radius:8px;border:1px solid var(--border);flex-shrink:0;display:none}
+.img-thumb.show{display:block}
+.btn-img-remove{width:30px;height:30px;border-radius:6px;border:1px solid rgba(255,77,77,.3);background:rgba(255,77,77,.1);color:var(--danger);font-size:.9rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.btn-img-remove:hover{background:rgba(255,77,77,.25)}
+.btn-img-add{width:100%;margin-top:4px;padding:9px;background:transparent;border:1px dashed var(--border);border-radius:8px;color:var(--muted);font-size:.82rem;cursor:pointer;transition:all .2s;text-align:center}
+.btn-img-add:hover{border-color:var(--accent);color:var(--accent)}
 
 /* ── Buttons ── */
 .btn-primary{padding:12px 24px;background:var(--gold-grad);border:none;border-radius:8px;color:#07070f;font-weight:700;font-size:.95rem;cursor:pointer;transition:opacity .2s}
@@ -375,11 +383,11 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;mi
       </div>
 
       <div class="form-section">
-        <div class="form-section-title">Imagem do Produto</div>
-        <div class="form-group">
-          <label>URL da Imagem *</label>
-          <input type="url" id="addImg" placeholder="https://..." oninput="previewImg()">
-          <img id="imgPreview" class="img-preview" alt="Preview">
+        <div class="form-section-title">Fotos do Produto</div>
+        <div class="form-group full-span">
+          <label>URLs das Imagens * <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">(1ª = foto principal)</span></label>
+          <div class="img-list" id="addImgList"></div>
+          <button type="button" class="btn-img-add" onclick="addImgRow('addImgList')">+ Adicionar outra foto</button>
         </div>
         <p style="font-size:.8rem;color:var(--muted);margin-top:10px">
           💡 Hospede imagens no <a href="https://imgur.com" target="_blank" style="color:var(--accent)">Imgur</a>, <a href="https://imgbb.com" target="_blank" style="color:var(--accent)">ImgBB</a> ou outro host e cole o link direto.
@@ -477,9 +485,9 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;mi
         </select>
       </div>
       <div class="form-group full-span">
-        <label>URL da Imagem</label>
-        <input type="url" id="editImg" placeholder="https://..." oninput="previewEditImg()">
-        <img id="editImgPreview" class="img-preview" alt="Preview">
+        <label>Fotos do Produto <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0">(1ª = principal)</span></label>
+        <div class="img-list" id="editImgList"></div>
+        <button type="button" class="btn-img-add" onclick="addImgRow('editImgList')">+ Adicionar outra foto</button>
       </div>
     </div>
     <div class="form-actions" style="margin-top:20px">
@@ -582,6 +590,7 @@ function switchTab(btn, id) {
 // ─────────────────────────────────────────────
 function initApp() {
   buildCheckGrids();
+  if(!document.querySelector('#addImgList .img-row')) addImgRow('addImgList');
   loadAllProducts();
   renderTable();
   updateStats();
@@ -843,12 +852,16 @@ function openEdit(id) {
   const ov        = overrides[id] || {};
 
   document.getElementById('editId').value       = id;
-  document.getElementById('editName').value     = ov.name  ?? p.name  ?? '';
-  document.getElementById('editPrice').value    = ov.price ?? p.price ?? '';
+  document.getElementById('editName').value     = ov.name     ?? p.name     ?? '';
+  document.getElementById('editPrice').value    = ov.price    ?? p.price    ?? '';
   document.getElementById('editOldPrice').value = ov.oldPrice ?? p.oldPrice ?? '';
-  document.getElementById('editBadge').value    = ov.badge ?? p.badge ?? '';
-  document.getElementById('editImg').value      = ov.img   ?? p.img   ?? '';
-  previewEditImg();
+  document.getElementById('editBadge').value    = ov.badge    ?? p.badge    ?? '';
+
+  // Populate multi-image list
+  const editList = document.getElementById('editImgList');
+  editList.innerHTML = '';
+  const existingImgs = ov.imgs ?? p.imgs ?? (p.img ? [p.img] : []);
+  (existingImgs.length ? existingImgs : ['']).forEach(url => addImgRow('editImgList', url));
 
   document.getElementById('editOverlay').classList.add('open');
 }
@@ -858,43 +871,66 @@ function closeEdit() {
 function closeEditIfBg(e) {
   if(e.target === document.getElementById('editOverlay')) closeEdit();
 }
-function previewEditImg() {
-  const url = document.getElementById('editImg').value;
-  const img = document.getElementById('editImgPreview');
-  if(url) { img.src=url; img.className='img-preview show'; }
-  else    { img.className='img-preview'; }
+// ─────────────────────────────────────────────
+// MULTI-IMAGE HELPERS
+// ─────────────────────────────────────────────
+function addImgRow(listId, url='') {
+  const list = document.getElementById(listId);
+  const row  = document.createElement('div');
+  row.className = 'img-row';
+  row.innerHTML = `
+    <input type="url" placeholder="https://..." value="${url}">
+    <img class="img-thumb${url?' show':''}" src="${url}" alt="">
+    <button type="button" class="btn-img-remove" onclick="removeImgRow(this)" title="Remover">✕</button>`;
+  row.querySelector('input').addEventListener('input', function() {
+    const thumb = this.nextElementSibling;
+    if(this.value) { thumb.src=this.value; thumb.className='img-thumb show'; }
+    else           { thumb.className='img-thumb'; }
+  });
+  list.appendChild(row);
+  _syncRemoveBtns(listId);
 }
-function saveEdit() {
-  const id    = parseInt(document.getElementById('editId').value);
-  const custom = getCustom();
-  const isCustom = custom.some(p => p.id === id);
+function removeImgRow(btn) {
+  const list = btn.parentElement.parentElement;
+  btn.parentElement.remove();
+  _syncRemoveBtns(list.id);
+}
+function _syncRemoveBtns(listId) {
+  const rows = document.querySelectorAll(`#${listId} .img-row`);
+  rows.forEach(r => r.querySelector('.btn-img-remove').style.display = rows.length > 1 ? '' : 'none');
+}
+function getImgs(listId) {
+  return [...document.querySelectorAll(`#${listId} input`)].map(i=>i.value.trim()).filter(Boolean);
+}
 
+function saveEdit() {
+  const id       = parseInt(document.getElementById('editId').value);
+  const custom   = getCustom();
+  const isCustom = custom.some(p => p.id === id);
   const name     = document.getElementById('editName').value.trim();
   const price    = parseFloat(document.getElementById('editPrice').value) || 0;
   const oldPrice = parseFloat(document.getElementById('editOldPrice').value) || 0;
   const badge    = document.getElementById('editBadge').value;
-  const img      = document.getElementById('editImg').value.trim();
+  const imgs     = getImgs('editImgList');
 
   if(isCustom) {
-    // Edit custom product directly
     const idx = custom.findIndex(p => p.id === id);
     if(idx !== -1) {
-      if(name) custom[idx].name = name;
-      if(price) custom[idx].price = price;
+      if(name)     custom[idx].name     = name;
+      if(price)    custom[idx].price    = price;
       if(oldPrice) custom[idx].oldPrice = oldPrice;
       custom[idx].badge = badge;
-      if(img) custom[idx].img = img;
+      if(imgs.length) { custom[idx].imgs = imgs; custom[idx].img = imgs[0]; }
       saveCustom(custom);
     }
   } else {
-    // Store in overrides
     const overrides = getOverrides();
     if(!overrides[id]) overrides[id] = {};
     if(name)     overrides[id].name     = name;
     if(price)    overrides[id].price    = price;
     if(oldPrice) overrides[id].oldPrice = oldPrice;
     overrides[id].badge = badge;
-    if(img)      overrides[id].img      = img;
+    if(imgs.length) { overrides[id].imgs = imgs; overrides[id].img = imgs[0]; }
     saveOverrides(overrides);
   }
 
@@ -906,12 +942,6 @@ function saveEdit() {
 // ─────────────────────────────────────────────
 // ADD PRODUCT
 // ─────────────────────────────────────────────
-function previewImg() {
-  const url = document.getElementById('addImg').value;
-  const img = document.getElementById('imgPreview');
-  if(url) { img.src=url; img.className='img-preview show'; }
-  else    { img.className='img-preview'; }
-}
 
 function getChecked(gridId) {
   return [...document.querySelectorAll(`#${gridId} input:checked`)].map(i => i.value);
@@ -931,40 +961,37 @@ function addProduct() {
   const price    = parseFloat(document.getElementById('addPrice').value);
   const oldPrice = parseFloat(document.getElementById('addOldPrice').value) || 0;
   const badge    = document.getElementById('addBadge').value;
-  const img      = document.getElementById('addImg').value.trim();
+  const imgs     = getImgs('addImgList');
   const sizes    = getChecked('sizesGrid');
   const colors   = getChecked('colorsGrid');
 
-  if(!name)      { showToast('⚠️ Informe o nome do produto', 'error'); return; }
-  if(!cat)       { showToast('⚠️ Selecione a categoria', 'error'); return; }
-  if(!price || price <= 0) { showToast('⚠️ Informe um preço válido', 'error'); return; }
-  if(!img)       { showToast('⚠️ Informe a URL da imagem', 'error'); return; }
-  if(sizes.length === 0) { showToast('⚠️ Selecione pelo menos um tamanho', 'error'); return; }
+  if(!name)             { showToast('⚠️ Informe o nome do produto', 'error'); return; }
+  if(!cat)              { showToast('⚠️ Selecione a categoria', 'error'); return; }
+  if(!price || price<=0){ showToast('⚠️ Informe um preço válido', 'error'); return; }
+  if(!imgs.length)      { showToast('⚠️ Adicione pelo menos 1 foto', 'error'); return; }
+  if(!sizes.length)     { showToast('⚠️ Selecione pelo menos um tamanho', 'error'); return; }
 
-  const custom = getCustom();
-  const id     = 10000 + custom.length + 1;
-  const code   = genCustomCode(cat);
-
-  // Build color objects matching CORES format
+  const custom    = getCustom();
+  const id        = 10000 + custom.length + 1;
+  const code      = genCustomCode(cat);
   const colorObjs = CORES_ALL.filter(c => colors.includes(c.hex));
 
-  custom.push({ id, code, name, cat, price, oldPrice: oldPrice||null, badge, img, sizes, colors: colorObjs, hidden: false });
+  custom.push({ id, code, name, cat, price, oldPrice: oldPrice||null, badge, img: imgs[0], imgs, sizes, colors: colorObjs, hidden: false });
   saveCustom(custom);
 
   clearAddForm();
   renderTable();
   updateStats();
   showToast(`✅ "${name}" adicionado ao catálogo!`, 'success');
-
-  // Switch to catalog tab
   document.querySelector('.tab').click();
 }
 
 function clearAddForm() {
-  ['addName','addPrice','addOldPrice','addImg'].forEach(id => document.getElementById(id).value = '');
+  ['addName','addPrice','addOldPrice'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('addCat').value   = '';
   document.getElementById('addBadge').value = '';
-  document.getElementById('imgPreview').className = 'img-preview';
+  document.getElementById('addImgList').innerHTML = '';
+  addImgRow('addImgList'); // reset to one empty row
   document.querySelectorAll('#sizesGrid input, #colorsGrid input').forEach(i => {
     i.checked = false;
     i.parentElement.classList.remove('checked');
