@@ -438,10 +438,14 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;mi
 
         <div class="settings-card">
           <h3>Produtos Personalizados</h3>
-          <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px">
-            Gerencie os produtos que você adicionou manualmente.
-          </p>
+          <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px">Produtos adicionados manualmente via painel.</p>
           <div id="customProductsList" style="font-size:.85rem;color:var(--muted)">Nenhum produto personalizado.</div>
+        </div>
+
+        <div class="settings-card">
+          <h3>Produtos Excluídos</h3>
+          <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px">Produtos removidos do catálogo. Você pode restaurá-los.</p>
+          <div id="deletedProductsList" style="font-size:.85rem;color:var(--muted)">Nenhum produto excluído.</div>
         </div>
 
         <div class="settings-card">
@@ -700,7 +704,7 @@ function renderPage() {
         <div class="row-actions">
           <button class="btn-sm btn-edit" onclick="openEdit(${p.id})">✏️ Editar</button>
           <button class="btn-sm btn-hide" onclick="toggleHide(${p.id})">${isHidden ? '👁 Mostrar' : '🙈 Ocultar'}</button>
-          ${isCustom ? `<button class="btn-sm btn-del" onclick="deleteCustom(${p.id})">🗑 Remover</button>` : ''}
+          <button class="btn-sm btn-del" onclick="deleteProduct(${p.id}, ${isCustom})">🗑 Excluir</button>
         </div>
       </td>`;
     tbody.appendChild(tr);
@@ -1001,13 +1005,32 @@ function clearAddForm() {
 // ─────────────────────────────────────────────
 // DELETE CUSTOM
 // ─────────────────────────────────────────────
-function deleteCustom(id) {
-  if(!confirm('Remover este produto personalizado?')) return;
-  const custom = getCustom().filter(p => p.id !== id);
-  saveCustom(custom);
+function deleteProduct(id, isCustom) {
+  if(!confirm('Excluir este produto do catálogo? Ele não aparecerá mais na loja.')) return;
+  if(isCustom) {
+    saveCustom(getCustom().filter(p => p.id !== id));
+  } else {
+    const deleted = getDeleted();
+    if(!deleted.includes(id)) { deleted.push(id); saveDeleted(deleted); }
+    // Also remove any override for this product
+    const overrides = getOverrides();
+    delete overrides[id];
+    saveOverrides(overrides);
+  }
   renderTable();
   updateStats();
-  showToast('🗑 Produto removido', 'success');
+  renderDashboard();
+  showToast('🗑 Produto excluído', 'success');
+}
+
+function restoreProduct(id) {
+  const deleted = getDeleted().filter(d => d !== id);
+  saveDeleted(deleted);
+  renderTable();
+  updateStats();
+  renderDashboard();
+  loadSettings();
+  showToast('✅ Produto restaurado', 'success');
 }
 
 // ─────────────────────────────────────────────
@@ -1019,17 +1042,30 @@ function loadSettings() {
 
   // Custom products list
   const custom = getCustom();
-  const el = document.getElementById('customProductsList');
-  if(custom.length === 0) {
-    el.textContent = 'Nenhum produto personalizado.';
-  } else {
-    el.innerHTML = custom.map(p =>
-      `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
-        <span>${p.code} — ${p.name}</span>
-        <button class="btn-sm btn-del" onclick="deleteCustom(${p.id});loadSettings()">🗑</button>
-      </div>`
-    ).join('');
-  }
+  const elC = document.getElementById('customProductsList');
+  elC.innerHTML = custom.length === 0
+    ? 'Nenhum produto personalizado.'
+    : custom.map(p =>
+        `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span>${p.code} — ${p.name}</span>
+          <button class="btn-sm btn-del" onclick="deleteProduct(${p.id},true);loadSettings()">🗑</button>
+        </div>`
+      ).join('');
+
+  // Deleted products list
+  const deleted  = getDeleted();
+  const cache    = getCache();
+  const elD = document.getElementById('deletedProductsList');
+  elD.innerHTML = deleted.length === 0
+    ? 'Nenhum produto excluído.'
+    : deleted.map(id => {
+        const p = cache.find(x => x.id === id);
+        const label = p ? `${p.code} — ${p.name}` : `ID ${id}`;
+        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="color:var(--muted)">${label}</span>
+          <button class="btn-sm btn-edit" onclick="restoreProduct(${id})">↩ Restaurar</button>
+        </div>`;
+      }).join('');
 
   // Clear pw fields
   ['setPwCur','setPwNew','setPwCfm'].forEach(id => document.getElementById(id).value = '');
