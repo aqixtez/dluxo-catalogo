@@ -1316,7 +1316,7 @@ window.addEventListener('DOMContentLoaded', () => {
 function buildCatList() {
   const el = document.getElementById('catList');
   const cats = ['Todos', ...Object.keys(CATS)];
-  const counts = {'Todos': produtos.length, ...Object.fromEntries(Object.entries(CATS).map(([k,v])=>[k,v.count]))};
+  const counts = {'Todos': produtos.length, ...Object.fromEntries(Object.keys(CATS).map(k=>[k, produtos.filter(p=>p.cat===k).length]))};
   el.innerHTML = cats.map(c=>`
     <li onclick="setCategory('${c}')" id="cat-${c.replace(/ /g,'_')}">
       <div class="filter-left">
