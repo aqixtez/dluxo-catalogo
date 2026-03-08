@@ -428,6 +428,23 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;mi
         </div>
 
         <div class="settings-card">
+          <h3>🔄 Sincronização Multi-dispositivo</h3>
+          <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px">
+            Cole um <strong style="color:var(--text)">GitHub Token</strong> (scope: <code style="color:var(--accent)">repo</code>) para sincronizar o catálogo entre celular e PC automaticamente.<br>
+            <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--accent)">Criar token aqui ↗</a>
+          </p>
+          <div class="form-group">
+            <label>GitHub Personal Access Token</label>
+            <input type="password" id="setGhToken" placeholder="ghp_...">
+          </div>
+          <div class="form-actions" style="margin-top:16px">
+            <button class="btn-primary" onclick="saveGhToken()">Salvar Token</button>
+            <button class="btn-sm" onclick="syncToGitHub(true)" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:.85rem">☁️ Sincronizar agora</button>
+          </div>
+          <div id="syncStatus" style="font-size:.8rem;color:var(--muted);margin-top:10px"></div>
+        </div>
+
+        <div class="settings-card">
           <h3>Alterar Senha</h3>
           <div class="form-group"><label>Senha Atual</label><input type="password" id="setPwCur" placeholder="Senha atual"></div>
           <div class="form-group" style="margin-top:12px"><label>Nova Senha</label><input type="password" id="setPwNew" placeholder="Nova senha"></div>
@@ -552,11 +569,75 @@ function getCustom()       { return ls.get('dluxo_custom_products','[]'); }
 function getSettings()     { return ls.get('dluxo_settings','{}'); }
 function getCache()        { return ls.get('dluxo_products_cache','[]'); }
 function getAdminPw()      { return ls.str('dluxo_admin_pw', DEFAULT_PW); }
+function getGhToken()      { return ls.str('dluxo_gh_token', ''); }
 
 function saveOverrides(o)  { ls.set('dluxo_overrides', o); }
 function saveDeleted(d)    { ls.set('dluxo_deleted', d); }
 function saveCustom(c)     { ls.set('dluxo_custom_products', c); }
 function saveSettings(s)   { ls.set('dluxo_settings', s); }
+
+// ─────────────────────────────────────────────
+// GITHUB SYNC
+// ─────────────────────────────────────────────
+const GH_REPO = 'aqixtez/dluxo-catalogo';
+const GH_FILE = 'data/catalog.json';
+
+function saveGhToken() {
+  const token = document.getElementById('setGhToken').value.trim();
+  if(!token) {
+    if(getGhToken()) { showToast('ℹ️ Token mantido', 'success'); return; }
+    showToast('⚠️ Digite um token', 'error'); return;
+  }
+  localStorage.setItem('dluxo_gh_token', token);
+  document.getElementById('setGhToken').value = '';
+  const el = document.getElementById('setGhToken');
+  el.placeholder = 'Token configurado (deixe em branco para manter)';
+  showToast('✅ Token salvo!', 'success');
+  syncToGitHub(true);
+}
+
+async function syncToGitHub(showMsg=false) {
+  const token = getGhToken();
+  if(!token) {
+    if(showMsg) showToast('⚠️ Configure o token GitHub nas Configurações', 'error');
+    return;
+  }
+  const data = {
+    overrides:       getOverrides(),
+    deleted:         getDeleted(),
+    custom_products: getCustom(),
+    settings:        getSettings()
+  };
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+  const apiUrl  = `https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`;
+  const headers = {
+    'Authorization': `token ${token}`,
+    'Accept':        'application/vnd.github.v3+json',
+    'Content-Type':  'application/json'
+  };
+  const statusEl = document.getElementById('syncStatus');
+  if(statusEl) statusEl.textContent = '⏳ Sincronizando...';
+  try {
+    let sha = null;
+    const getRes = await fetch(apiUrl, { headers });
+    if(getRes.ok) { const j = await getRes.json(); sha = j.sha; }
+    const body = { message: "Sync catálogo D'Luxo", content };
+    if(sha) body.sha = sha;
+    const putRes = await fetch(apiUrl, { method:'PUT', headers, body: JSON.stringify(body) });
+    if(putRes.ok) {
+      const ts = new Date().toLocaleTimeString('pt-BR');
+      if(statusEl) statusEl.textContent = '✅ Sincronizado às ' + ts;
+      if(showMsg) showToast('☁️ Catálogo sincronizado!', 'success');
+    } else {
+      const err = await putRes.json();
+      if(statusEl) statusEl.textContent = '❌ ' + (err.message || 'Falha');
+      if(showMsg) showToast('⚠️ Erro: ' + (err.message||'Falha'), 'error');
+    }
+  } catch(e) {
+    if(statusEl) statusEl.textContent = '❌ Erro de conexão';
+    if(showMsg) showToast('⚠️ Erro de conexão', 'error');
+  }
+}
 
 // ─────────────────────────────────────────────
 // AUTH
@@ -845,6 +926,7 @@ function toggleHide(id) {
   saveOverrides(overrides);
   renderTable();
   showToast(overrides[id].hidden ? '🙈 Produto ocultado' : '👁 Produto visível');
+  syncToGitHub();
 }
 
 // ─────────────────────────────────────────────
@@ -942,6 +1024,7 @@ function saveEdit() {
   closeEdit();
   renderTable();
   showToast('✅ Produto atualizado!', 'success');
+  syncToGitHub();
 }
 
 // ─────────────────────────────────────────────
@@ -988,6 +1071,7 @@ function addProduct() {
   renderTable();
   updateStats();
   showToast(`✅ "${name}" adicionado ao catálogo!`, 'success');
+  syncToGitHub();
   document.querySelector('.tab').click();
 }
 
@@ -1036,6 +1120,7 @@ function deleteAllVisible() {
 
   loadAllProducts(); renderTable(); updateStats(); renderDashboard();
   showToast(`🗑 ${count} produto(s) excluído(s)`, 'success');
+  syncToGitHub();
 }
 
 function deleteProduct(id, isCustom) {
@@ -1054,6 +1139,7 @@ function deleteProduct(id, isCustom) {
   updateStats();
   renderDashboard();
   showToast('🗑 Produto excluído', 'success');
+  syncToGitHub();
 }
 
 function restoreProduct(id) {
@@ -1064,6 +1150,7 @@ function restoreProduct(id) {
   renderDashboard();
   loadSettings();
   showToast('✅ Produto restaurado', 'success');
+  syncToGitHub();
 }
 
 // ─────────────────────────────────────────────
@@ -1072,6 +1159,9 @@ function restoreProduct(id) {
 function loadSettings() {
   const s = getSettings();
   document.getElementById('setWa').value = s.whatsapp || DEFAULT_WA;
+  const ghInput = document.getElementById('setGhToken');
+  ghInput.value = '';
+  ghInput.placeholder = getGhToken() ? 'Token configurado (deixe em branco para manter)' : 'ghp_...';
 
   // Custom products list
   const custom = getCustom();
@@ -1111,6 +1201,7 @@ function saveSettings() {
   s.whatsapp = wa;
   ls.set('dluxo_settings', s);
   showToast('✅ Configurações salvas!', 'success');
+  syncToGitHub();
 }
 
 function changePassword() {

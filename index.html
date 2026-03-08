@@ -1281,17 +1281,40 @@ const _raw = genProducts();
 localStorage.setItem('dluxo_products_cache', JSON.stringify(
   _raw.map(p=>({id:p.id,code:p.code,name:p.name,cat:p.cat,price:p.price,oldPrice:p.oldPrice,img:p.img,badge:p.badge,sizes:p.sizes,colors:p.colors}))
 ));
-// Apply admin overrides
-const _overrides  = JSON.parse(localStorage.getItem('dluxo_overrides')||'{}');
-const _deleted    = JSON.parse(localStorage.getItem('dluxo_deleted')||'[]');
-const _custom     = JSON.parse(localStorage.getItem('dluxo_custom_products')||'[]');
-const _settings   = JSON.parse(localStorage.getItem('dluxo_settings')||'{}');
-const produtos = [
-  ..._raw.filter(p=>!_deleted.includes(p.id)).map(p=>_overrides[p.id]?{...p,..._overrides[p.id]}:p),
-  ..._custom
-];
+// Apply admin overrides (mutable for GitHub sync)
+let _overrides = JSON.parse(localStorage.getItem('dluxo_overrides')||'{}');
+let _deleted   = JSON.parse(localStorage.getItem('dluxo_deleted')||'[]');
+let _custom    = JSON.parse(localStorage.getItem('dluxo_custom_products')||'[]');
+let _settings  = JSON.parse(localStorage.getItem('dluxo_settings')||'{}');
+function _buildProdutos() {
+  return [
+    ..._raw.filter(p=>!_deleted.includes(p.id)).map(p=>_overrides[p.id]?{...p,..._overrides[p.id]}:p),
+    ..._custom
+  ];
+}
+let produtos = _buildProdutos();
 // Apply WhatsApp from settings if set
 if(_settings.whatsapp) window._dluxo_wa = _settings.whatsapp;
+// Sync from GitHub (cross-device)
+async function _syncFromGitHub() {
+  try {
+    const url = 'https://raw.githubusercontent.com/aqixtez/dluxo-catalogo/main/data/catalog.json?cb=' + Date.now();
+    const res = await fetch(url);
+    if(!res.ok) return;
+    const data = await res.json();
+    _overrides = data.overrides || {};
+    _deleted   = data.deleted   || [];
+    _custom    = data.custom_products || [];
+    _settings  = data.settings  || {};
+    localStorage.setItem('dluxo_overrides',        JSON.stringify(_overrides));
+    localStorage.setItem('dluxo_deleted',           JSON.stringify(_deleted));
+    localStorage.setItem('dluxo_custom_products',   JSON.stringify(_custom));
+    localStorage.setItem('dluxo_settings',          JSON.stringify(_settings));
+    produtos = _buildProdutos();
+    if(_settings.whatsapp) window._dluxo_wa = _settings.whatsapp;
+    buildCatList(); buildSizeList(); updateBadgeCounts(); filterProducts();
+  } catch(e) { /* usa localStorage como fallback */ }
+}
 let filteredProdutos = [...produtos];
 let currentPage = 1;
 const PER_PAGE = 24;
@@ -1310,6 +1333,7 @@ window.addEventListener('DOMContentLoaded', () => {
   buildSizeList();
   updateBadgeCounts();
   filterProducts();
+  _syncFromGitHub();
   document.getElementById('searchInput').addEventListener('input', filterProducts);
 });
 
