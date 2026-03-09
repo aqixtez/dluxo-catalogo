@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773098828265,
+  "_savedAt": 1773098907416,
   "overrides": {},
   "deleted": [
     1,
@@ -413,6 +413,34 @@
         "G"
       ],
       "colors": [],
+      "hidden": false
+    },
+    {
+      "id": 10003,
+      "code": "CON-C001",
+      "name": "Teste",
+      "cat": "Conjuntos",
+      "price": 200,
+      "oldPrice": null,
+      "badge": "",
+      "img": "ghp_",
+      "imgs": [
+        "ghp_"
+      ],
+      "sizes": [
+        "PP",
+        "XGG"
+      ],
+      "colors": [
+        {
+          "hex": "#4169E1",
+          "nome": "Azul Jordan"
+        },
+        {
+          "hex": "#2d2d2d",
+          "nome": "Chumbo"
+        }
+      ],
       "hidden": false
     }
   ],
