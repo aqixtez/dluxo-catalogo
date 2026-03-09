@@ -1337,6 +1337,7 @@ async function _syncFromGitHub() {
     produtos = _buildProdutos();
     if(_settings.whatsapp) window._dluxo_wa = _settings.whatsapp;
     updateHero();
+    updatePriceRange();
     buildCatList(); buildSizeList(); updateBadgeCounts(); filterProducts();
   } catch(e) { /* usa localStorage como fallback */ }
 }
@@ -1357,6 +1358,7 @@ window.addEventListener('DOMContentLoaded', () => {
   buildCatList();
   buildSizeList();
   updateBadgeCounts();
+  updatePriceRange();
   filterProducts();
   _syncFromGitHub();
   document.getElementById('searchInput').addEventListener('input', filterProducts);
@@ -1372,6 +1374,7 @@ window.addEventListener('storage', e => {
     produtos   = _buildProdutos();
     if(_settings.whatsapp) window._dluxo_wa = _settings.whatsapp;
     updateHero();
+    updatePriceRange();
     buildCatList(); buildSizeList(); updateBadgeCounts(); filterProducts();
   }
 });
@@ -1437,6 +1440,20 @@ function toggleBadge(b) {
   if(el) el.classList.toggle('active', activeBadges.includes(b));
   currentPage = 1;
   filterProducts();
+}
+
+function updatePriceRange() {
+  if(!produtos.length) return;
+  const maxVal = Math.ceil(Math.max(...produtos.map(p => p.price)));
+  const slider = document.getElementById('priceRange');
+  const input  = document.getElementById('maxPrice');
+  if(!slider || !input) return;
+  // Only expand the range (never shrink it below current user selection)
+  if(maxVal > +(slider.max)) {
+    slider.max   = maxVal;
+    slider.value = maxVal;
+    input.value  = maxVal;
+  }
 }
 
 function onPriceRange(v) {
