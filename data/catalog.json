@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773097431278,
+  "_savedAt": 1773097490917,
   "overrides": {},
   "deleted": [
     1,
@@ -368,7 +368,35 @@
     364,
     365
   ],
-  "custom_products": [],
+  "custom_products": [
+    {
+      "id": 10001,
+      "code": "REG-C001",
+      "name": "ggg",
+      "cat": "Regatas",
+      "price": 555,
+      "oldPrice": null,
+      "badge": "",
+      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/e671ff16-7520-48c1-aa4a-4b7003dd4e1c.jpeg",
+      "imgs": [
+        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/e671ff16-7520-48c1-aa4a-4b7003dd4e1c.jpeg"
+      ],
+      "sizes": [
+        "XGG"
+      ],
+      "colors": [
+        {
+          "hex": "#552583",
+          "nome": "Roxo Lakers"
+        },
+        {
+          "hex": "#556B2F",
+          "nome": "Verde Militar"
+        }
+      ],
+      "hidden": false
+    }
+  ],
   "settings": {
     "whatsapp": "5521991588414"
   }
