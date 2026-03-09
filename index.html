@@ -1314,13 +1314,17 @@ function openHeroProduct() {
 }
 updateHero();
 
-// Sync from GitHub (cross-device)
+// Sync from GitHub (cross-device) — usa Contents API para evitar cache CDN
 async function _syncFromGitHub() {
   try {
-    const url = 'https://raw.githubusercontent.com/aqixtez/dluxo-catalogo/main/data/catalog.json?cb=' + Date.now();
-    const res = await fetch(url);
+    // GitHub Contents API não tem cache CDN (ao contrário de raw.githubusercontent.com)
+    const apiUrl = 'https://api.github.com/repos/aqixtez/dluxo-catalogo/contents/data/catalog.json?ref=main';
+    const res = await fetch(apiUrl, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
     if(!res.ok) return;
-    const data = await res.json();
+    const json = await res.json();
+    // Conteúdo vem em base64
+    const raw  = decodeURIComponent(escape(atob(json.content.replace(/\n/g, ''))));
+    const data = JSON.parse(raw);
     // Só sobrescreve localStorage se o GitHub tiver dados mais novos
     const localAt = parseInt(localStorage.getItem('dluxo_saved_at') || '0');
     const ghAt    = data._savedAt || 0;
@@ -1361,6 +1365,8 @@ window.addEventListener('DOMContentLoaded', () => {
   updatePriceRange();
   filterProducts();
   _syncFromGitHub();
+  // Sync automático a cada 2 minutos para pegar mudanças do admin em outros dispositivos
+  setInterval(_syncFromGitHub, 120000);
   document.getElementById('searchInput').addEventListener('input', filterProducts);
 });
 
