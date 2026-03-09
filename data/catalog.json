@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773098907416,
+  "_savedAt": 1773098937475,
   "overrides": {},
   "deleted": [
     1,
@@ -368,82 +368,7 @@
     364,
     365
   ],
-  "custom_products": [
-    {
-      "id": 10001,
-      "code": "REG-C001",
-      "name": "ggg",
-      "cat": "Regatas",
-      "price": 555,
-      "oldPrice": null,
-      "badge": "",
-      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/e671ff16-7520-48c1-aa4a-4b7003dd4e1c.jpeg",
-      "imgs": [
-        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/e671ff16-7520-48c1-aa4a-4b7003dd4e1c.jpeg"
-      ],
-      "sizes": [
-        "XGG"
-      ],
-      "colors": [
-        {
-          "hex": "#552583",
-          "nome": "Roxo Lakers"
-        },
-        {
-          "hex": "#556B2F",
-          "nome": "Verde Militar"
-        }
-      ],
-      "hidden": false
-    },
-    {
-      "id": 10002,
-      "code": "CAM-C001",
-      "name": "camisa premin",
-      "cat": "Camisetas",
-      "price": 1000,
-      "oldPrice": null,
-      "badge": "NOVO",
-      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/e671ff16-7520-48c1-aa4a-4b7003dd4e1c.jpeg",
-      "imgs": [
-        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/e671ff16-7520-48c1-aa4a-4b7003dd4e1c.jpeg"
-      ],
-      "sizes": [
-        "M",
-        "G"
-      ],
-      "colors": [],
-      "hidden": false
-    },
-    {
-      "id": 10003,
-      "code": "CON-C001",
-      "name": "Teste",
-      "cat": "Conjuntos",
-      "price": 200,
-      "oldPrice": null,
-      "badge": "",
-      "img": "ghp_",
-      "imgs": [
-        "ghp_"
-      ],
-      "sizes": [
-        "PP",
-        "XGG"
-      ],
-      "colors": [
-        {
-          "hex": "#4169E1",
-          "nome": "Azul Jordan"
-        },
-        {
-          "hex": "#2d2d2d",
-          "nome": "Chumbo"
-        }
-      ],
-      "hidden": false
-    }
-  ],
+  "custom_products": [],
   "settings": {
     "whatsapp": "5521991588414"
   }
