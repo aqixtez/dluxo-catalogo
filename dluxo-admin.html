@@ -623,7 +623,25 @@ function saveGhToken() {
   syncToGitHub(true);
 }
 
+let _syncPending = false;
+let _syncQueued  = false;
+
 async function syncToGitHub(showMsg=false) {
+  // Evita syncs concorrentes: se já está rodando, agenda mais um ao final
+  if(_syncPending) { _syncQueued = true; return; }
+  _syncPending = true;
+  try {
+    await _doSync(showMsg);
+  } finally {
+    _syncPending = false;
+    if(_syncQueued) {
+      _syncQueued = false;
+      setTimeout(() => syncToGitHub(false), 300);
+    }
+  }
+}
+
+async function _doSync(showMsg=false) {
   const token = getGhToken();
   if(!token) {
     if(showMsg) showToast('⚠️ Configure o token GitHub nas Configurações', 'error');
@@ -647,38 +665,36 @@ async function syncToGitHub(showMsg=false) {
   const statusEl = document.getElementById('syncStatus');
   if(statusEl) statusEl.textContent = '⏳ Sincronizando...';
 
-  // Busca SHA atual do branch main e faz PUT; retenta 1x se SHA divergir
-  async function _doPut() {
-    const getRes = await fetch(apiUrl + '?ref=main', { headers });
+  // Busca SHA fresco e faz PUT — retenta até 3x com delay em caso de SHA mismatch
+  async function _doPut(attempt) {
+    const getRes = await fetch(apiUrl + '?ref=main&_=' + Date.now(), { headers });
     let sha = null;
     if(getRes.ok) { const j = await getRes.json(); sha = j.sha; }
     const body = { message: "Sync catálogo D'Luxo", content, branch: 'main' };
     if(sha) body.sha = sha;
-    return fetch(apiUrl, { method:'PUT', headers, body: JSON.stringify(body) });
+    const putRes = await fetch(apiUrl, { method:'PUT', headers, body: JSON.stringify(body) });
+    if(!putRes.ok) {
+      const errBody = await putRes.json();
+      if(errBody.message?.includes('does not match') && attempt < 3) {
+        await new Promise(r => setTimeout(r, 400 * attempt));
+        return _doPut(attempt + 1);
+      }
+      return { ok: false, _errMsg: errBody.message || 'Falha' };
+    }
+    return putRes;
   }
 
   try {
-    let putRes = await _doPut();
-    // Se falhou por SHA desatualizado, retenta uma vez com SHA fresco
-    if(!putRes.ok) {
-      const errBody = await putRes.json();
-      if(errBody.message && errBody.message.includes('does not match')) {
-        putRes = await _doPut();
-      } else {
-        if(statusEl) statusEl.textContent = '❌ ' + errBody.message;
-        if(showMsg) showToast('⚠️ Erro: ' + errBody.message, 'error');
-        return;
-      }
-    }
+    const putRes = await _doPut(1);
     if(putRes.ok) {
       localStorage.setItem('dluxo_saved_at', String(savedAt));
       const ts = new Date().toLocaleTimeString('pt-BR');
       if(statusEl) statusEl.textContent = '✅ Sincronizado às ' + ts;
       if(showMsg) showToast('☁️ Catálogo sincronizado!', 'success');
     } else {
-      const err = await putRes.json();
-      if(statusEl) statusEl.textContent = '❌ ' + (err.message || 'Falha');
-      if(showMsg) showToast('⚠️ Erro: ' + (err.message||'Falha'), 'error');
+      const msg = putRes._errMsg || 'Falha';
+      if(statusEl) statusEl.textContent = '❌ ' + msg;
+      if(showMsg) showToast('⚠️ Erro: ' + msg, 'error');
     }
   } catch(e) {
     if(statusEl) statusEl.textContent = '❌ Erro de conexão';
