@@ -602,7 +602,9 @@ async function syncToGitHub(showMsg=false) {
     if(showMsg) showToast('⚠️ Configure o token GitHub nas Configurações', 'error');
     return;
   }
+  const savedAt = Date.now();
   const data = {
+    _savedAt:        savedAt,
     overrides:       getOverrides(),
     deleted:         getDeleted(),
     custom_products: getCustom(),
@@ -625,6 +627,7 @@ async function syncToGitHub(showMsg=false) {
     if(sha) body.sha = sha;
     const putRes = await fetch(apiUrl, { method:'PUT', headers, body: JSON.stringify(body) });
     if(putRes.ok) {
+      localStorage.setItem('dluxo_saved_at', String(savedAt));
       const ts = new Date().toLocaleTimeString('pt-BR');
       if(statusEl) statusEl.textContent = '✅ Sincronizado às ' + ts;
       if(showMsg) showToast('☁️ Catálogo sincronizado!', 'success');

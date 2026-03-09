@@ -1302,6 +1302,10 @@ async function _syncFromGitHub() {
     const res = await fetch(url);
     if(!res.ok) return;
     const data = await res.json();
+    // Só sobrescreve localStorage se o GitHub tiver dados mais novos
+    const localAt = parseInt(localStorage.getItem('dluxo_saved_at') || '0');
+    const ghAt    = data._savedAt || 0;
+    if(ghAt <= localAt) return;
     _overrides = data.overrides || {};
     _deleted   = data.deleted   || [];
     _custom    = data.custom_products || [];
@@ -1310,6 +1314,7 @@ async function _syncFromGitHub() {
     localStorage.setItem('dluxo_deleted',           JSON.stringify(_deleted));
     localStorage.setItem('dluxo_custom_products',   JSON.stringify(_custom));
     localStorage.setItem('dluxo_settings',          JSON.stringify(_settings));
+    localStorage.setItem('dluxo_saved_at',          String(ghAt));
     produtos = _buildProdutos();
     if(_settings.whatsapp) window._dluxo_wa = _settings.whatsapp;
     buildCatList(); buildSizeList(); updateBadgeCounts(); filterProducts();
