@@ -1362,6 +1362,20 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('searchInput').addEventListener('input', filterProducts);
 });
 
+// Detecta mudanças no localStorage feitas pelo admin (mesmo navegador, outra aba)
+window.addEventListener('storage', e => {
+  if(['dluxo_overrides','dluxo_deleted','dluxo_custom_products','dluxo_settings'].includes(e.key)) {
+    _overrides = JSON.parse(localStorage.getItem('dluxo_overrides')||'{}');
+    _deleted   = JSON.parse(localStorage.getItem('dluxo_deleted')||'[]');
+    _custom    = JSON.parse(localStorage.getItem('dluxo_custom_products')||'[]');
+    _settings  = JSON.parse(localStorage.getItem('dluxo_settings')||'{}');
+    produtos   = _buildProdutos();
+    if(_settings.whatsapp) window._dluxo_wa = _settings.whatsapp;
+    updateHero();
+    buildCatList(); buildSizeList(); updateBadgeCounts(); filterProducts();
+  }
+});
+
 function buildCatList() {
   const el = document.getElementById('catList');
   const cats = ['Todos', ...Object.keys(CATS)];
