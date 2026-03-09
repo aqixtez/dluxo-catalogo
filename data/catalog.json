@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773096917342,
+  "_savedAt": 1773096995676,
   "overrides": {},
   "deleted": [
     1,
@@ -368,7 +368,33 @@
     364,
     365
   ],
-  "custom_products": [],
+  "custom_products": [
+    {
+      "id": 10001,
+      "code": "BER-C001",
+      "name": "Bermuda Bordada",
+      "cat": "Bermudas",
+      "price": 40,
+      "oldPrice": null,
+      "badge": "",
+      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/e671ff16-7520-48c1-aa4a-4b7003dd4e1c.jpeg",
+      "imgs": [
+        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/e671ff16-7520-48c1-aa4a-4b7003dd4e1c.jpeg"
+      ],
+      "sizes": [
+        "M",
+        "G",
+        "GG"
+      ],
+      "colors": [
+        {
+          "hex": "#228B22",
+          "nome": "Verde"
+        }
+      ],
+      "hidden": false
+    }
+  ],
   "settings": {
     "whatsapp": "5521991588414"
   }
