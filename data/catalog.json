@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773100327220,
+  "_savedAt": 1773100367265,
   "overrides": {},
   "deleted": [
     1,
@@ -368,7 +368,32 @@
     364,
     365
   ],
-  "custom_products": [],
+  "custom_products": [
+    {
+      "id": 10001,
+      "code": "CAL-C001",
+      "name": "Móbile",
+      "cat": "Calças",
+      "price": 10,
+      "oldPrice": null,
+      "badge": "",
+      "img": "❌ data/catalog.json does not match 5fdb663d585d1df1548883a815d519086d3e79e4",
+      "imgs": [
+        "❌ data/catalog.json does not match 5fdb663d585d1df1548883a815d519086d3e79e4"
+      ],
+      "sizes": [
+        "PP",
+        "XGG"
+      ],
+      "colors": [
+        {
+          "hex": "#556B2F",
+          "nome": "Verde Militar"
+        }
+      ],
+      "hidden": false
+    }
+  ],
   "settings": {
     "whatsapp": "5521991588414"
   }
