@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773099170342,
+  "_savedAt": 1773099211380,
   "overrides": {},
   "deleted": [
     1,
@@ -368,7 +368,32 @@
     364,
     365
   ],
-  "custom_products": [],
+  "custom_products": [
+    {
+      "id": 10001,
+      "code": "BER-C001",
+      "name": "teste",
+      "cat": "Bermudas",
+      "price": 100,
+      "oldPrice": null,
+      "badge": "NOVO",
+      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/e671ff16-7520-48c1-aa4a-4b7003dd4e1c.jpeg",
+      "imgs": [
+        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/e671ff16-7520-48c1-aa4a-4b7003dd4e1c.jpeg"
+      ],
+      "sizes": [
+        "P",
+        "M"
+      ],
+      "colors": [
+        {
+          "hex": "#4169E1",
+          "nome": "Azul Jordan"
+        }
+      ],
+      "hidden": false
+    }
+  ],
   "settings": {
     "whatsapp": "5521991588414"
   }
