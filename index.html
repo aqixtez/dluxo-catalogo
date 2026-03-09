@@ -759,7 +759,7 @@
     <p>Peças exclusivas de altíssima qualidade. Design sofisticado, tecido premium e acabamento impecável — para quem exige o melhor.</p>
     <div class="hero-cta">
       <button class="btn-primary" onclick="scrollToProducts()">Ver Catálogo</button>
-      <button class="btn-outline" onclick="openModal(produtos[0])">Ver Destaque</button>
+      <button class="btn-outline" id="btnVerDestaque" onclick="openHeroProduct()">Ver Destaque</button>
     </div>
     <div class="hero-stats">
       <div class="stat"><strong>420+</strong><span>Produtos</span></div>
@@ -768,9 +768,9 @@
     </div>
   </div>
   <div class="hero-img">
-    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80" alt="Produto destaque">
-    <div class="floating-tag top"><div class="dot"></div> Novo Estoque</div>
-    <div class="floating-tag bot">🏆 Top Vendido</div>
+    <img id="heroImg" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80" alt="Produto destaque">
+    <div class="floating-tag top" id="heroTagTop"><div class="dot"></div> Novo Estoque</div>
+    <div class="floating-tag bot" id="heroTagBot">🏆 Top Vendido</div>
   </div>
 </section>
 
@@ -1296,6 +1296,24 @@ function _buildProdutos() {
 let produtos = _buildProdutos();
 // Apply WhatsApp from settings if set
 if(_settings.whatsapp) window._dluxo_wa = _settings.whatsapp;
+
+// ── Hero destaque dinâmico ──────────────────────────────────────
+function updateHero() {
+  const s = _settings;
+  const img    = document.getElementById('heroImg');
+  const tagTop = document.getElementById('heroTagTop');
+  const tagBot = document.getElementById('heroTagBot');
+  if(img    && s.hero_img)     img.src = s.hero_img;
+  if(tagTop && s.hero_tag_top) tagTop.innerHTML = '<div class="dot"></div> ' + s.hero_tag_top;
+  if(tagBot && s.hero_tag_bot) tagBot.textContent = s.hero_tag_bot;
+}
+function openHeroProduct() {
+  const pid = _settings.hero_product_id;
+  const p   = pid ? produtos.find(x => String(x.id) === String(pid)) : produtos[0];
+  if(p) openModal(p);
+}
+updateHero();
+
 // Sync from GitHub (cross-device)
 async function _syncFromGitHub() {
   try {
@@ -1318,6 +1336,7 @@ async function _syncFromGitHub() {
     localStorage.setItem('dluxo_saved_at',          String(ghAt));
     produtos = _buildProdutos();
     if(_settings.whatsapp) window._dluxo_wa = _settings.whatsapp;
+    updateHero();
     buildCatList(); buildSizeList(); updateBadgeCounts(); filterProducts();
   } catch(e) { /* usa localStorage como fallback */ }
 }

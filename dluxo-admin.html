@@ -418,6 +418,31 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;mi
     <div class="content">
       <div class="settings-grid">
         <div class="settings-card">
+          <h3>🖼 Produto em Destaque</h3>
+          <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px">Produto exibido no banner principal da loja.</p>
+          <div class="form-group" style="position:relative">
+            <label>Buscar produto</label>
+            <input type="text" id="heroSearch" placeholder="Nome ou código..." oninput="heroSearchResults(this.value)" autocomplete="off">
+            <div id="heroSearchList" style="position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border);border-radius:8px;z-index:50;display:none;max-height:220px;overflow-y:auto;margin-top:4px"></div>
+          </div>
+          <div id="heroCurrentProduct" style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:16px;font-size:.85rem;color:var(--muted)">
+            Nenhum produto selecionado
+          </div>
+          <input type="hidden" id="heroProductId">
+          <div class="form-group">
+            <label>Tag Superior (ex: Novo Estoque)</label>
+            <input type="text" id="heroTagTopInput" placeholder="Novo Estoque">
+          </div>
+          <div class="form-group" style="margin-top:12px">
+            <label>Tag Inferior (ex: 🏆 Top Vendido)</label>
+            <input type="text" id="heroTagBotInput" placeholder="🏆 Top Vendido">
+          </div>
+          <div class="form-actions" style="margin-top:16px">
+            <button class="btn-primary" onclick="saveHeroSettings()">Salvar Destaque</button>
+          </div>
+        </div>
+
+        <div class="settings-card">
           <h3>WhatsApp</h3>
           <div class="form-group">
             <label>Número (somente dígitos, com DDI)</label>
@@ -1160,7 +1185,71 @@ function restoreProduct(id) {
 // ─────────────────────────────────────────────
 // SETTINGS
 // ─────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// HERO DESTAQUE
+// ─────────────────────────────────────────────
+function loadHeroSettings() {
+  const s = getSettings();
+  document.getElementById('heroTagTopInput').value = s.hero_tag_top || 'Novo Estoque';
+  document.getElementById('heroTagBotInput').value = s.hero_tag_bot || '🏆 Top Vendido';
+  document.getElementById('heroProductId').value   = s.hero_product_id || '';
+  const el = document.getElementById('heroCurrentProduct');
+  if(s.hero_product_id) {
+    const p = getAllProducts().find(x => String(x.id) === String(s.hero_product_id));
+    if(p) { el.innerHTML = `<img src="${p.img}" style="width:42px;height:42px;object-fit:cover;border-radius:6px"><strong>${p.name}</strong>`; return; }
+  }
+  el.innerHTML = 'Nenhum produto selecionado';
+}
+
+function heroSearchResults(q) {
+  const list = document.getElementById('heroSearchList');
+  if(!q || q.length < 2) { list.style.display='none'; return; }
+  const matches = getAllProducts().filter(p =>
+    p.name.toLowerCase().includes(q.toLowerCase()) || String(p.code).includes(q)
+  ).slice(0,8);
+  if(!matches.length) { list.style.display='none'; return; }
+  list.innerHTML = matches.map(p =>
+    `<div onclick="selectHeroProduct(${p.id})" style="display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border)">
+      <img src="${p.img}" style="width:36px;height:36px;object-fit:cover;border-radius:6px">
+      <span style="font-size:.85rem">${p.name}</span>
+    </div>`
+  ).join('');
+  list.style.display = 'block';
+}
+
+function selectHeroProduct(id) {
+  const p = getAllProducts().find(x => x.id === id);
+  if(!p) return;
+  document.getElementById('heroProductId').value = id;
+  document.getElementById('heroSearch').value    = '';
+  document.getElementById('heroSearchList').style.display = 'none';
+  document.getElementById('heroCurrentProduct').innerHTML =
+    `<img src="${p.img}" style="width:42px;height:42px;object-fit:cover;border-radius:6px"><strong>${p.name}</strong>`;
+}
+
+function saveHeroSettings() {
+  const s  = getSettings();
+  const pid = document.getElementById('heroProductId').value;
+  s.hero_product_id = pid;
+  s.hero_tag_top    = document.getElementById('heroTagTopInput').value.trim() || 'Novo Estoque';
+  s.hero_tag_bot    = document.getElementById('heroTagBotInput').value.trim() || '🏆 Top Vendido';
+  if(pid) {
+    const p = getAllProducts().find(x => String(x.id) === String(pid));
+    if(p) s.hero_img = p.img;
+  }
+  ls.set('dluxo_settings', s);
+  showToast('✅ Destaque salvo!', 'success');
+  syncToGitHub();
+}
+
+// Fecha lista de busca ao clicar fora
+document.addEventListener('click', e => {
+  if(!e.target.closest('#heroSearch') && !e.target.closest('#heroSearchList'))
+    document.getElementById('heroSearchList') && (document.getElementById('heroSearchList').style.display='none');
+});
+
 function loadSettings() {
+  loadHeroSettings();
   const s = getSettings();
   document.getElementById('setWa').value = s.whatsapp || DEFAULT_WA;
   const ghInput = document.getElementById('setGhToken');
