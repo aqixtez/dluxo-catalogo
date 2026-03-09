@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773100221752,
+  "_savedAt": 1773100298342,
   "overrides": {},
   "deleted": [
     1,
@@ -368,7 +368,31 @@
     364,
     365
   ],
-  "custom_products": [],
+  "custom_products": [
+    {
+      "id": 10001,
+      "code": "CAM-C001",
+      "name": "teste 1",
+      "cat": "Camisetas",
+      "price": 20,
+      "oldPrice": null,
+      "badge": "NOVO",
+      "img": "❌ data/catalog.json does not match 5fdb663d585d1df1548883a815d519086d3e79e",
+      "imgs": [
+        "❌ data/catalog.json does not match 5fdb663d585d1df1548883a815d519086d3e79e"
+      ],
+      "sizes": [
+        "M"
+      ],
+      "colors": [
+        {
+          "hex": "#FF69B4",
+          "nome": "Rosa"
+        }
+      ],
+      "hidden": false
+    }
+  ],
   "settings": {
     "whatsapp": "5521991588414"
   }
