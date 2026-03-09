@@ -468,6 +468,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;mi
             <button class="btn-sm" onclick="syncToGitHub(true)" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:.85rem">☁️ Sincronizar agora</button>
           </div>
           <div id="syncStatus" style="font-size:.8rem;color:var(--muted);margin-top:10px"></div>
+          <div id="tokenStatus" style="font-size:.8rem;margin-top:6px"></div>
         </div>
 
         <div class="settings-card">
@@ -647,9 +648,11 @@ async function syncToGitHub(showMsg=false) {
   if(statusEl) statusEl.textContent = '⏳ Sincronizando...';
   try {
     let sha = null;
-    const getRes = await fetch(apiUrl, { headers });
+    // Lê SHA do branch main explicitamente
+    const getRes = await fetch(apiUrl + '?ref=main', { headers });
     if(getRes.ok) { const j = await getRes.json(); sha = j.sha; }
-    const body = { message: "Sync catálogo D'Luxo", content };
+    // Escreve sempre no branch main
+    const body = { message: "Sync catálogo D'Luxo", content, branch: 'main' };
     if(sha) body.sha = sha;
     const putRes = await fetch(apiUrl, { method:'PUT', headers, body: JSON.stringify(body) });
     if(putRes.ok) {
@@ -1195,7 +1198,7 @@ function loadHeroSettings() {
   document.getElementById('heroProductId').value   = s.hero_product_id || '';
   const el = document.getElementById('heroCurrentProduct');
   if(s.hero_product_id) {
-    const p = getAllProducts().find(x => String(x.id) === String(s.hero_product_id));
+    const p = allProducts.find(x => String(x.id) === String(s.hero_product_id));
     if(p) { el.innerHTML = `<img src="${p.img}" style="width:42px;height:42px;object-fit:cover;border-radius:6px"><strong>${p.name}</strong>`; return; }
   }
   el.innerHTML = 'Nenhum produto selecionado';
@@ -1204,7 +1207,7 @@ function loadHeroSettings() {
 function heroSearchResults(q) {
   const list = document.getElementById('heroSearchList');
   if(!q || q.length < 2) { list.style.display='none'; return; }
-  const matches = getAllProducts().filter(p =>
+  const matches = allProducts.filter(p =>
     p.name.toLowerCase().includes(q.toLowerCase()) || String(p.code).includes(q)
   ).slice(0,8);
   if(!matches.length) { list.style.display='none'; return; }
@@ -1218,7 +1221,7 @@ function heroSearchResults(q) {
 }
 
 function selectHeroProduct(id) {
-  const p = getAllProducts().find(x => x.id === id);
+  const p = allProducts.find(x => x.id === id);
   if(!p) return;
   document.getElementById('heroProductId').value = id;
   document.getElementById('heroSearch').value    = '';
@@ -1234,7 +1237,7 @@ function saveHeroSettings() {
   s.hero_tag_top    = document.getElementById('heroTagTopInput').value.trim() || 'Novo Estoque';
   s.hero_tag_bot    = document.getElementById('heroTagBotInput').value.trim() || '🏆 Top Vendido';
   if(pid) {
-    const p = getAllProducts().find(x => String(x.id) === String(pid));
+    const p = allProducts.find(x => String(x.id) === String(pid));
     if(p) s.hero_img = p.img;
   }
   ls.set('dluxo_settings', s);
@@ -1254,7 +1257,12 @@ function loadSettings() {
   document.getElementById('setWa').value = s.whatsapp || DEFAULT_WA;
   const ghInput = document.getElementById('setGhToken');
   ghInput.value = '';
-  ghInput.placeholder = getGhToken() ? 'Token configurado (deixe em branco para manter)' : 'ghp_...';
+  const hasToken = !!getGhToken();
+  ghInput.placeholder = hasToken ? 'Token configurado (deixe em branco para manter)' : 'ghp_...';
+  const tEl = document.getElementById('tokenStatus');
+  if(tEl) tEl.innerHTML = hasToken
+    ? '🟢 Token configurado — <a href="#" onclick="syncToGitHub(true);return false" style="color:var(--accent)">Sincronizar agora ↗</a>'
+    : '🔴 Token não configurado — sem sincronização entre dispositivos';
 
   // Custom products list
   const custom = getCustom();
