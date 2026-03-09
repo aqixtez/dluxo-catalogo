@@ -646,15 +646,30 @@ async function syncToGitHub(showMsg=false) {
   };
   const statusEl = document.getElementById('syncStatus');
   if(statusEl) statusEl.textContent = '⏳ Sincronizando...';
-  try {
-    let sha = null;
-    // Lê SHA do branch main explicitamente
+
+  // Busca SHA atual do branch main e faz PUT; retenta 1x se SHA divergir
+  async function _doPut() {
     const getRes = await fetch(apiUrl + '?ref=main', { headers });
+    let sha = null;
     if(getRes.ok) { const j = await getRes.json(); sha = j.sha; }
-    // Escreve sempre no branch main
     const body = { message: "Sync catálogo D'Luxo", content, branch: 'main' };
     if(sha) body.sha = sha;
-    const putRes = await fetch(apiUrl, { method:'PUT', headers, body: JSON.stringify(body) });
+    return fetch(apiUrl, { method:'PUT', headers, body: JSON.stringify(body) });
+  }
+
+  try {
+    let putRes = await _doPut();
+    // Se falhou por SHA desatualizado, retenta uma vez com SHA fresco
+    if(!putRes.ok) {
+      const errBody = await putRes.json();
+      if(errBody.message && errBody.message.includes('does not match')) {
+        putRes = await _doPut();
+      } else {
+        if(statusEl) statusEl.textContent = '❌ ' + errBody.message;
+        if(showMsg) showToast('⚠️ Erro: ' + errBody.message, 'error');
+        return;
+      }
+    }
     if(putRes.ok) {
       localStorage.setItem('dluxo_saved_at', String(savedAt));
       const ts = new Date().toLocaleTimeString('pt-BR');
