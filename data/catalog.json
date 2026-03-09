@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773098764539,
+  "_savedAt": 1773098828265,
   "overrides": {},
   "deleted": [
     1,
@@ -394,6 +394,25 @@
           "nome": "Verde Militar"
         }
       ],
+      "hidden": false
+    },
+    {
+      "id": 10002,
+      "code": "CAM-C001",
+      "name": "camisa premin",
+      "cat": "Camisetas",
+      "price": 1000,
+      "oldPrice": null,
+      "badge": "NOVO",
+      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/e671ff16-7520-48c1-aa4a-4b7003dd4e1c.jpeg",
+      "imgs": [
+        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/e671ff16-7520-48c1-aa4a-4b7003dd4e1c.jpeg"
+      ],
+      "sizes": [
+        "M",
+        "G"
+      ],
+      "colors": [],
       "hidden": false
     }
   ],
