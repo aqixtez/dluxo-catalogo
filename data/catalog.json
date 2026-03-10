@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773103401076,
+  "_savedAt": 1773103620802,
   "overrides": {},
   "deleted": [
     1,
@@ -391,6 +391,26 @@
           "nome": "Verde Militar"
         }
       ],
+      "hidden": false
+    },
+    {
+      "id": 10002,
+      "code": "BER-C001",
+      "name": "Bermuda Basquete Importada",
+      "cat": "Bermudas",
+      "price": 85,
+      "oldPrice": null,
+      "badge": "",
+      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/8ea0bf84-f8c9-431d-8e45-0a1a08d8379c.jpeg",
+      "imgs": [
+        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/8ea0bf84-f8c9-431d-8e45-0a1a08d8379c.jpeg"
+      ],
+      "sizes": [
+        "M",
+        "G",
+        "GG"
+      ],
+      "colors": [],
       "hidden": false
     }
   ],
