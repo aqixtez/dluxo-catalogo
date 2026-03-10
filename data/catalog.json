@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773103892771,
+  "_savedAt": 1773103996268,
   "overrides": {},
   "deleted": [
     1,
@@ -407,6 +407,39 @@
         "GG"
       ],
       "colors": [],
+      "hidden": false
+    },
+    {
+      "id": 10003,
+      "code": "BER-C003",
+      "name": "Bermuda Basquete Importada",
+      "cat": "Bermudas",
+      "price": 85,
+      "oldPrice": null,
+      "badge": "",
+      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/1aa38202-eec0-456e-b574-1dae8f30af85.jpeg",
+      "imgs": [
+        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/1aa38202-eec0-456e-b574-1dae8f30af85.jpeg"
+      ],
+      "sizes": [
+        "M",
+        "G",
+        "GG"
+      ],
+      "colors": [
+        {
+          "hex": "#000000",
+          "nome": "Preto"
+        },
+        {
+          "hex": "#FFFFFF",
+          "nome": "Branco"
+        },
+        {
+          "hex": "#000080",
+          "nome": "Azul Marinho"
+        }
+      ],
       "hidden": false
     }
   ],
