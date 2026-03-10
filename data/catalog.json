@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773104550101,
+  "_savedAt": 1773104884126,
   "overrides": {},
   "deleted": [
     1,
@@ -553,6 +553,43 @@
         {
           "hex": "#FF0000",
           "nome": "Vermelho"
+        }
+      ],
+      "hidden": false
+    },
+    {
+      "id": 10007,
+      "code": "BER-C007",
+      "name": "R$ 60,00",
+      "cat": "Bermudas",
+      "price": 75,
+      "oldPrice": null,
+      "badge": "",
+      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/1f5e0563-8f97-47cf-8dbb-ae2f9d86b452.jpeg",
+      "imgs": [
+        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/1f5e0563-8f97-47cf-8dbb-ae2f9d86b452.jpeg"
+      ],
+      "sizes": [
+        "M",
+        "G",
+        "GG"
+      ],
+      "colors": [
+        {
+          "hex": "#000000",
+          "nome": "Preto"
+        },
+        {
+          "hex": "#FF0000",
+          "nome": "Vermelho"
+        },
+        {
+          "hex": "#ADD8E6",
+          "nome": "Azul Claro"
+        },
+        {
+          "hex": "#00008B",
+          "nome": "Azul Escuro"
         }
       ],
       "hidden": false
