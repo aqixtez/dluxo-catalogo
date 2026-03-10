@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773104189382,
+  "_savedAt": 1773104307024,
   "overrides": {},
   "deleted": [
     1,
@@ -475,6 +475,43 @@
         {
           "hex": "#00008B",
           "nome": "Azul Escuro"
+        },
+        {
+          "hex": "#000080",
+          "nome": "Azul Marinho"
+        }
+      ],
+      "hidden": false
+    },
+    {
+      "id": 10005,
+      "code": "BER-C005",
+      "name": "Bermuda Basquete Importada",
+      "cat": "Bermudas",
+      "price": 85,
+      "oldPrice": null,
+      "badge": "",
+      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/cc5f70b9-fa6a-4f54-9efa-294a29e74d2b.jpeg",
+      "imgs": [
+        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/cc5f70b9-fa6a-4f54-9efa-294a29e74d2b.jpeg"
+      ],
+      "sizes": [
+        "M",
+        "G",
+        "GG"
+      ],
+      "colors": [
+        {
+          "hex": "#000000",
+          "nome": "Preto"
+        },
+        {
+          "hex": "#FFFFFF",
+          "nome": "Branco"
+        },
+        {
+          "hex": "#1E90FF",
+          "nome": "Azul"
         },
         {
           "hex": "#000080",
