@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773104900176,
+  "_savedAt": 1773105015323,
   "overrides": {},
   "deleted": [
     1,
@@ -370,226 +370,25 @@
   ],
   "custom_products": [
     {
-      "id": 10002,
-      "code": "BER-C001",
-      "name": "Bermuda Basquete Importada",
-      "cat": "Bermudas",
-      "price": 85,
+      "id": 10001,
+      "code": "CAL-C001",
+      "name": "Móbile",
+      "cat": "Calças",
+      "price": 10,
       "oldPrice": null,
       "badge": "",
-      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/8ea0bf84-f8c9-431d-8e45-0a1a08d8379c.jpeg",
+      "img": "❌ data/catalog.json does not match 5fdb663d585d1df1548883a815d519086d3e79e4",
       "imgs": [
-        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/8ea0bf84-f8c9-431d-8e45-0a1a08d8379c.jpeg"
+        "❌ data/catalog.json does not match 5fdb663d585d1df1548883a815d519086d3e79e4"
       ],
       "sizes": [
-        "M",
-        "G",
-        "GG"
-      ],
-      "colors": [],
-      "hidden": false
-    },
-    {
-      "id": 10002,
-      "code": "BER-C002",
-      "name": "Bermuda Basquete Importada",
-      "cat": "Bermudas",
-      "price": 110,
-      "oldPrice": null,
-      "badge": "",
-      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/6908d9f0-0473-4734-8bf8-c1ee5bcab530.jpeg",
-      "imgs": [
-        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/6908d9f0-0473-4734-8bf8-c1ee5bcab530.jpeg"
-      ],
-      "sizes": [
-        "M",
-        "G",
-        "GG"
-      ],
-      "colors": [],
-      "hidden": false
-    },
-    {
-      "id": 10003,
-      "code": "BER-C003",
-      "name": "Bermuda Basquete Importada",
-      "cat": "Bermudas",
-      "price": 85,
-      "oldPrice": null,
-      "badge": "",
-      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/1aa38202-eec0-456e-b574-1dae8f30af85.jpeg",
-      "imgs": [
-        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/1aa38202-eec0-456e-b574-1dae8f30af85.jpeg"
-      ],
-      "sizes": [
-        "M",
-        "G",
-        "GG"
+        "PP",
+        "XGG"
       ],
       "colors": [
         {
-          "hex": "#000000",
-          "nome": "Preto"
-        },
-        {
-          "hex": "#FFFFFF",
-          "nome": "Branco"
-        },
-        {
-          "hex": "#000080",
-          "nome": "Azul Marinho"
-        }
-      ],
-      "hidden": false
-    },
-    {
-      "id": 10004,
-      "code": "BER-C004",
-      "name": "Bermuda Basquete Importada",
-      "cat": "Bermudas",
-      "price": 85,
-      "oldPrice": null,
-      "badge": "",
-      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/918d9690-6d8a-4f02-94cd-770decaaab48.jpeg",
-      "imgs": [
-        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/918d9690-6d8a-4f02-94cd-770decaaab48.jpeg"
-      ],
-      "sizes": [
-        "M",
-        "G",
-        "GG"
-      ],
-      "colors": [
-        {
-          "hex": "#000000",
-          "nome": "Preto"
-        },
-        {
-          "hex": "#FFFFFF",
-          "nome": "Branco"
-        },
-        {
-          "hex": "#FF0000",
-          "nome": "Vermelho"
-        },
-        {
-          "hex": "#00008B",
-          "nome": "Azul Escuro"
-        },
-        {
-          "hex": "#000080",
-          "nome": "Azul Marinho"
-        }
-      ],
-      "hidden": false
-    },
-    {
-      "id": 10005,
-      "code": "BER-C005",
-      "name": "Bermuda Basquete Importada",
-      "cat": "Bermudas",
-      "price": 85,
-      "oldPrice": null,
-      "badge": "",
-      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/cc5f70b9-fa6a-4f54-9efa-294a29e74d2b.jpeg",
-      "imgs": [
-        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/cc5f70b9-fa6a-4f54-9efa-294a29e74d2b.jpeg"
-      ],
-      "sizes": [
-        "M",
-        "G",
-        "GG"
-      ],
-      "colors": [
-        {
-          "hex": "#000000",
-          "nome": "Preto"
-        },
-        {
-          "hex": "#FFFFFF",
-          "nome": "Branco"
-        },
-        {
-          "hex": "#1E90FF",
-          "nome": "Azul"
-        },
-        {
-          "hex": "#000080",
-          "nome": "Azul Marinho"
-        }
-      ],
-      "hidden": false
-    },
-    {
-      "id": 10006,
-      "code": "BER-C006",
-      "name": "Bermuda Basquete Importada",
-      "cat": "Bermudas",
-      "price": 85,
-      "oldPrice": null,
-      "badge": "",
-      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/4dd9a453-c182-47f5-b040-a117e3f5ca68.jpeg",
-      "imgs": [
-        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/4dd9a453-c182-47f5-b040-a117e3f5ca68.jpeg"
-      ],
-      "sizes": [
-        "M",
-        "G",
-        "GG"
-      ],
-      "colors": [
-        {
-          "hex": "#000000",
-          "nome": "Preto"
-        },
-        {
-          "hex": "#FFFFFF",
-          "nome": "Branco"
-        },
-        {
-          "hex": "#808080",
-          "nome": "Cinza"
-        },
-        {
-          "hex": "#FF0000",
-          "nome": "Vermelho"
-        }
-      ],
-      "hidden": false
-    },
-    {
-      "id": 10007,
-      "code": "BER-C007",
-      "name": "R$ 60,00",
-      "cat": "Bermudas",
-      "price": 75,
-      "oldPrice": null,
-      "badge": "",
-      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/1f5e0563-8f97-47cf-8dbb-ae2f9d86b452.jpeg",
-      "imgs": [
-        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/1f5e0563-8f97-47cf-8dbb-ae2f9d86b452.jpeg"
-      ],
-      "sizes": [
-        "M",
-        "G",
-        "GG"
-      ],
-      "colors": [
-        {
-          "hex": "#000000",
-          "nome": "Preto"
-        },
-        {
-          "hex": "#FF0000",
-          "nome": "Vermelho"
-        },
-        {
-          "hex": "#ADD8E6",
-          "nome": "Azul Claro"
-        },
-        {
-          "hex": "#00008B",
-          "nome": "Azul Escuro"
+          "hex": "#556B2F",
+          "nome": "Verde Militar"
         }
       ],
       "hidden": false
