@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773103845683,
+  "_savedAt": 1773103892771,
   "overrides": {},
   "deleted": [
     1,
@@ -380,6 +380,26 @@
       "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/8ea0bf84-f8c9-431d-8e45-0a1a08d8379c.jpeg",
       "imgs": [
         "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/8ea0bf84-f8c9-431d-8e45-0a1a08d8379c.jpeg"
+      ],
+      "sizes": [
+        "M",
+        "G",
+        "GG"
+      ],
+      "colors": [],
+      "hidden": false
+    },
+    {
+      "id": 10002,
+      "code": "BER-C002",
+      "name": "Bermuda Basquete Importada",
+      "cat": "Bermudas",
+      "price": 110,
+      "oldPrice": null,
+      "badge": "",
+      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/6908d9f0-0473-4734-8bf8-c1ee5bcab530.jpeg",
+      "imgs": [
+        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/6908d9f0-0473-4734-8bf8-c1ee5bcab530.jpeg"
       ],
       "sizes": [
         "M",
