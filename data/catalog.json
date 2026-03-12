@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773351966380,
+  "_savedAt": 1773351981414,
   "overrides": {
     "1": {
       "name": "Bermuda Basquete Importada",
@@ -585,6 +585,15 @@
         "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/3a771918-555f-4800-ad75-4bdc5208da81.jpeg"
       ],
       "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/3a771918-555f-4800-ad75-4bdc5208da81.jpeg"
+    },
+    "66": {
+      "name": "Bermuda Elastano",
+      "price": 55,
+      "badge": "",
+      "imgs": [
+        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/dc132970-002a-4513-9c39-af6577c74319.jpeg"
+      ],
+      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/dc132970-002a-4513-9c39-af6577c74319.jpeg"
     }
   },
   "deleted": [],
