@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773350104643,
+  "_savedAt": 1773350124477,
   "overrides": {
     "1": {
       "name": "Bermuda Basquete Importada",
@@ -81,6 +81,15 @@
         "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/06c64b9d-717f-4476-9816-431dd554e782.jpeg"
       ],
       "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/06c64b9d-717f-4476-9816-431dd554e782.jpeg"
+    },
+    "10": {
+      "name": "Bermuda Basquete Nacional",
+      "price": 80,
+      "badge": "",
+      "imgs": [
+        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/bc77580a-eae4-42fc-a083-72db2de74ed3.jpeg"
+      ],
+      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/bc77580a-eae4-42fc-a083-72db2de74ed3.jpeg"
     }
   },
   "deleted": [],
