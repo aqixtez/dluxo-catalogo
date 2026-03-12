@@ -1,5 +1,5 @@
 {
-  "_savedAt": 1773350305326,
+  "_savedAt": 1773350325304,
   "overrides": {
     "1": {
       "name": "Bermuda Basquete Importada",
@@ -144,6 +144,15 @@
         "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/ab74def8-e034-4234-ae24-004e661fcb6a.jpeg"
       ],
       "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/ab74def8-e034-4234-ae24-004e661fcb6a.jpeg"
+    },
+    "17": {
+      "name": "Bermuda Dry-Fit",
+      "price": 53,
+      "badge": "",
+      "imgs": [
+        "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/3f6c3226-d381-4599-800c-b9042d1255be.jpeg"
+      ],
+      "img": "https://supliutech.nyc3.cdn.digitaloceanspaces.com/products2/3f6c3226-d381-4599-800c-b9042d1255be.jpeg"
     }
   },
   "deleted": [],
